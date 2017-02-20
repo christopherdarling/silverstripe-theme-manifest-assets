@@ -1,0 +1,24 @@
+{
+  "name": "christopherdarling/silverstripe-theme-manifest-assets",
+  "description": "Loads theme assets from a JSON manifest produced from a build tool like Webpack",
+  "type": "silverstripe-module",
+  "keywords": ["silverstripe", "manifest", "asset", "theme", "webpack"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christopher Darling",
+      "homepage": "http://www.christopherdarling.co.uk",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "silverstripe/framework": ">=3.0.1",
+    "composer/installers": "*"
+  },
+  "support": {
+    "issues": "https://github.com/christopherdarling/silverstripe-theme-manifest-assets"
+  },
+  "extra": {
+    "installer-name": "cd_silverstripe-theme-manifest-assets"
+  }
+}

@@ -2,11 +2,18 @@
 
 namespace ChristopherDarling\ThemeManifestAssets;
 
+use \Config;
 use \Director;
 use \SSViewer;
 
 class ThemeManifestAssets implements \TemplateGlobalProvider
 {
+    /**
+     * @config
+     * @var string
+     */
+    private static $manifest_filename = 'assets.json';
+
     public static function get_template_global_variables() {
         return array(
             'ThemeManifestAsset' => 'getPath',
@@ -15,10 +22,15 @@ class ThemeManifestAssets implements \TemplateGlobalProvider
 
     private static $manifest_files_cache = null;
 
+    private static function getManifestFilename()
+    {
+        return Config::inst()->get(__CLASS__, 'manifest_filename');
+    }
+
     private static function getManifestFiles()
     {
         if (null === self::$manifest_files_cache) {
-            $manifest = SSViewer::get_theme_folder() . '/dist/assets.json';
+            $manifest = SSViewer::get_theme_folder() . '/dist/' . self::getManifestFilename();
             $absPath = Director::getAbsFile($manifest);
 
             if (file_exists($absPath)) {

@@ -1,15 +1,15 @@
 # Theme Manifest assets
 
-loads a JSON manifest file from {theme}/dist/assets.json, looks up a given path and outputs the hashed filename
+loads a JSON manifest file (default: themes/default/mainifest.json), looks up a given path and outputs the hashed filename
 
 ## Example
 
 ### Folder structure
 dist/
- - *subfolders*
- - assets.json
+ - *assets*.js
+ - manifest.json
 
-### assets.json
+### manifest.json
 ```
 {
   'img/logo.png': 'img/logo_HASH.png'

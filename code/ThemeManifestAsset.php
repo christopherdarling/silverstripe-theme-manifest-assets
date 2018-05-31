@@ -2,54 +2,72 @@
 
 namespace ChristopherDarling\ThemeManifestAssets;
 
-use \Config;
-use \Director;
-use \SSViewer;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Path;
+use SilverStripe\View\TemplateGlobalProvider;
 
-class ThemeManifestAssets implements \TemplateGlobalProvider
+class ThemeManifestAssets implements TemplateGlobalProvider
 {
+    /**
+     * @config
+     * @var string path of the folder that contains self::$manifest_filename
+     */
+    private static $manifest_base_path = 'themes/default/dist/';
+
     /**
      * @config
      * @var string
      */
-    private static $manifest_filename = 'assets.json';
+    private static $manifest_filename = 'manifest.json';
 
-    public static function get_template_global_variables() {
+    public static function get_template_global_variables()
+    {
         return array(
             'ThemeManifestAsset' => 'getPath',
         );
     }
 
-    private static $manifest_files_cache = null;
+    private static $manifest_cache = null;
 
-    private static function getManifestFilename()
+    private static function getManifestBasePath()
     {
-        return Config::inst()->get(__CLASS__, 'manifest_filename');
+        return Config::inst()->get(__CLASS__, 'manifest_base_path');
     }
 
-    private static function getManifestFiles()
+    private static function getManifestFilePath()
     {
-        if (null === self::$manifest_files_cache) {
-            $manifest = SSViewer::get_theme_folder() . '/dist/' . self::getManifestFilename();
-            $absPath = Director::getAbsFile($manifest);
+        $base_path = self::getManifestBasePath();
+        $filename = Config::inst()->get(__CLASS__, 'manifest_filename');
 
-            if (file_exists($absPath)) {
-                $contents = json_decode(file_get_contents($absPath), true);
+        return Path::join($base_path, $filename);
+    }
 
-                self::$manifest_files_cache[] = $contents;
-            }
+    private static function getManifest()
+    {
+        if (self::$manifest_cache !== null) {
+            return self::$manifest_cache;
         }
 
-        return self::$manifest_files_cache;
+        $manifest = self::getManifestFilePath();
+        $absPath = Director::getAbsFile($manifest);
+
+        if (file_exists($absPath)) {
+            $contents = json_decode(file_get_contents($absPath), true);
+
+            self::$manifest_cache = $contents;
+        } else {
+            self::$manifest_cache = false;
+        }
+
+        return self::$manifest_cache;
     }
 
     public static function getPath($path) {
-        if ($manifests = self::getManifestFiles()):
-            foreach ($manifests as $manifest => $map):
-                if (isset($map[$path])) {
-                    return SSViewer::get_theme_folder() . '/dist/' . $map[$path];
-                }
-            endforeach;
+        $manifest = self::getManifest();
+
+        if (isset($manifest[$path])):
+            return self::getManifestBasePath() . $manifest[$path];
         endif;
 
         return false;

@@ -12,12 +12,18 @@
     }
   ],
   "require": {
-    "silverstripe/framework": ">=4.0"
+    "silverstripe/vendor-plugin": "^1",
+    "silverstripe/framework": "^4.0"
   },
   "support": {
     "issues": "https://github.com/christopherdarling/silverstripe-theme-manifest-assets"
   },
   "extra": {
     "installer-name": "cd_silverstripe-theme-manifest-assets"
+  }
+  "autoload": {
+    "psr4": {
+      "ChristopherDarling\\ThemeManifestAssets": "src/",
+    }
   }
 }

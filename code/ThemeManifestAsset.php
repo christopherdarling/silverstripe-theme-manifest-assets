@@ -4,8 +4,10 @@ namespace ChristopherDarling\ThemeManifestAssets;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Path;
 use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\View\ThemeResourceLoader;
 
 class ThemeManifestAssets implements TemplateGlobalProvider
 {
@@ -20,6 +22,12 @@ class ThemeManifestAssets implements TemplateGlobalProvider
      * @var string
      */
     private static $manifest_filename = 'manifest.json';
+
+    /**
+     * @config
+     * @var string
+     */
+    private static $theme_path_prefix = '';
 
     public static function get_template_global_variables()
     {
@@ -67,7 +75,19 @@ class ThemeManifestAssets implements TemplateGlobalProvider
         $manifest = self::getManifest();
 
         if (isset($manifest[$path])):
-            return self::getManifestBasePath() . $manifest[$path];
+            $pathFromManifest = $manifest[$path];
+
+            $themePrefix = Config::inst()->get(__CLASS__, 'theme_path_prefix');
+            if (!is_null($themePrefix)) {
+                $pathFromManifest = $themePrefix . $pathFromManifest;
+            }
+
+            $themeResourcePath = ThemeResourceLoader::inst()->findThemedResource($pathFromManifest);
+            $relativeUrl = ModuleResourceLoader::singleton()->resolveURL($themeResourcePath);
+
+            if ($relativeUrl) {
+                return $relativeUrl;
+            }
         endif;
 
         return false;

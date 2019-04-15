@@ -20,10 +20,10 @@
   },
   "extra": {
     "installer-name": "cd_silverstripe-theme-manifest-assets"
-  }
+  },
   "autoload": {
     "psr4": {
-      "ChristopherDarling\\ThemeManifestAssets": "src/",
+      "ChristopherDarling\\ThemeManifestAssets": "src/"
     }
   }
 }

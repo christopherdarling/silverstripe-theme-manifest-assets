@@ -22,7 +22,7 @@
     "installer-name": "cd_silverstripe-theme-manifest-assets"
   },
   "autoload": {
-    "psr4": {
+    "psr-4": {
       "ChristopherDarling\\ThemeManifestAssets": "src/"
     }
   }
